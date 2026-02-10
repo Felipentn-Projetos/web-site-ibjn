@@ -356,7 +356,7 @@ nav {
 /* Responsividade para esconder o novo título no celular */
 @media (max-width: 768px) {
     .sidebar {
-        width: 70px;
+        width: 100px;
     }
 
     .sidebar span,
