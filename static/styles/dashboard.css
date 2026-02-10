@@ -16,8 +16,6 @@ body {
     display: flex;
     min-height: 100vh;
     margin: 0;
-    overflow-x: hidden;
-    /* Evita barra de rolagem chata */
     background-color: #f4f7f6;
 }
 
@@ -153,12 +151,13 @@ footer {
     background-color: #1e293b;
     color: white;
     padding: 2rem 0;
-    width: 100%;
-    flex-shrink: 0;
+    width: 100%; /* Agora ele segue a largura do main-content */
+    /* margin-top: auto;  */
+    /* Empurra o footer para o fim da página */
 }
 
 .footer-content {
-    max-width: 1000px;
+    /* max-width: 1000px; */
     margin: 0 auto;
     text-align: center;
     padding: 0 2rem;
@@ -197,7 +196,7 @@ footer {
     display: flex;
     flex-direction: column;
     position: fixed; /* Fixa na esquerda */
-    height: 100vh;
+    height: 100%;
     left: 0;
     top: 0;
     transition: all 0.3s ease;
@@ -286,17 +285,19 @@ footer {
 
 /* AJUSTE DO CONTEÚDO PRINCIPAL */
 .main-content {
-    margin-left: 250px; /* Deve ser igual à largura da sidebar */
+    margin-left: 250px; /* Largura da sidebar */
     flex: 1;
-    transition: margin-left 0.3s ease;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    width: calc(100% - 250px); /* Garante que não ultrapasse a tela */
+    transition: margin-left 0.3s ease, width 0.3s ease;
 }
-
-/* Quando a sidebar recolher, o conteúdo ganha espaço */
+/* Quando a sidebar recolher, ajustamos a margem e a largura do conteúdo */
+.sidebar.collapsed + .main-content, 
 .main-content.expanded {
-    margin-left: 80px;
+    margin-left: 100px; 
+    width: calc(100% - 100px);
 }
 
 /* Ajuste do Botão de Toggle */
@@ -359,16 +360,13 @@ nav {
         width: 70px;
     }
 
-    .sidebar span,
-    .sidebar-title {
-        display: none;
-    }
-
     .main-content {
         margin-left: 70px;
+        width: calc(100% - 70px);
     }
 
-    .logout-link {
-        justify-content: center;
+    /* Esconde textos para não quebrar o layout */
+    .sidebar span, .sidebar-title {
+        display: none;
     }
 }
