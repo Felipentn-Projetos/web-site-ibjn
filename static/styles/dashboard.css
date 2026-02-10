@@ -356,19 +356,22 @@ nav {
 /* Responsividade para esconder o novo título no celular */
 @media (max-width: 768px) {
     .sidebar {
-        width: 100px;
+        width:100px;
+        height: 100%;
+
     }
 
-    .sidebar span,
+    /* .sidebar span,
     .sidebar-title {
         display: none;
-    }
+    } */
 
-    .main-content {
+    /* .main-content {
         margin-left: 70px;
-    }
+    } */
 
     .logout-link {
         justify-content: center;
     }
 }
+
