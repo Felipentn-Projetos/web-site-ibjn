@@ -1,42 +1,35 @@
-from fastapi import FastAPI, HTTPException, Depends, status
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
-from typing import Optional
+from flask import Flask, request, jsonify, send_from_directory
+import os
 
-app = FastAPI()
+app = Flask(__name__, static_folder='static')
 
-# Modelo para os dados de login
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-# Usuário de teste (em um app real, isso viria de um banco de dados)
+# Usuário de teste
 USER_DB = {
     "admin": "123456"
 }
 
-# Servir arquivos estáticos (HTML, CSS, JS)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Rota para servir o HTML de Login
+@app.route("/")
+def read_index():
+    return send_from_directory('static', 'login.html')
 
-@app.get("/")
-async def read_index():
-    return FileResponse("static/login.html")
+# Rota para o Dashboard
+@app.route("/dashboard")
+def read_dashboard():
+    return send_from_directory('static', 'dashboard.html')
 
-@app.get("/dashboard")
-async def read_dashboard():
-    return FileResponse("static/dashboard.html")
+# API de Login
+@app.route("/api/login", methods=["POST"])
+def login():
+    # Pega os dados JSON enviados pelo JavaScript
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
 
-@app.post("/api/login")
-async def login(request: LoginRequest):
-    if request.username in USER_DB and USER_DB[request.username] == request.password:
-        return {"message": "Login realizado com sucesso", "status": "success"}
+    if username in USER_DB and USER_DB[username] == password:
+        return jsonify({"message": "Login realizado com sucesso", "status": "success"}), 200
     else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuário ou senha incorretos",
-        )
+        return jsonify({"detail": "Usuário ou senha incorretos"}), 401
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", port=8000, debug=True)
